@@ -98,6 +98,54 @@ describe('go.js', function() {
                 });
         });
 
+        it('expect get single request', (done) => {
+            chai.request(server)
+                .post('/games')
+                .send({'game-owner': 'user1', 'game-challenger': 'user2'})
+                .end((err, res) => {
+                    var gameID = res.body.id;
+
+                    chai.request(server)
+                        .get('/games/' + gameID)
+                        .end((err, res) => {
+                            var data = JSON.stringify(res.body);
+                            var expect = JSON.stringify({
+                                'id': gameID,
+                                'game-owner': 'user1',
+                                'game-challenger': 'user2'
+                            });
+                            assert.equal(res.status, 200);
+                            assert.equal(data, expect);
+
+                            done();
+                        });
+                });
+        });
+
+        it('expect get single request with different users', (done) => {
+            chai.request(server)
+                .post('/games')
+                .send({'game-owner': 'user3', 'game-challenger': 'user4'})
+                .end((err, res) => {
+                    var gameID = res.body.id;
+
+                    chai.request(server)
+                        .get('/games/' + gameID)
+                        .end((err, res) => {
+                            var data = JSON.stringify(res.body);
+                            var expect = JSON.stringify({
+                                'id': gameID,
+                                'game-owner': 'user3',
+                                'game-challenger': 'user4'
+                            });
+                            assert.equal(res.status, 200);
+                            assert.equal(data, expect);
+
+                            done();
+                        });
+                });
+        });
+
         it('expect edit game with new players', (done) => {
             chai.request(server)
                 .post('/games')
