@@ -49,9 +49,7 @@ describe('go.js', function() {
             chai.request(server)
                 .post('/games')
                 .send({'game-owner': 'user1', 'game-challenger': 'user2'})
-                .end((err, res) => {
-                    done();
-                });
+                .end();
 
             chai.request(server)
                 .get('/games')
@@ -67,6 +65,7 @@ describe('go.js', function() {
                     });
                     assert.equal(res.status, 200);
                     assert.equal(data, expect);
+
                     done();
                 });
         });
