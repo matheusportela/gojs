@@ -97,4 +97,5 @@ describe('go.js', function() {
                     done();
                 });
         });
+    });
 });
