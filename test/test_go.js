@@ -49,7 +49,16 @@ describe('go.js', function() {
             chai.request(server)
                 .post('/games')
                 .send({'game-owner': 'user1', 'game-challenger': 'user2'})
-                .end();
+                .end((err, res) => {
+                    var data = JSON.stringify(res.body);
+                    var expect = JSON.stringify({
+                        'id': 1,
+                        'game-owner': 'user1',
+                        'game-challenger': 'user2'
+                    });
+                    assert.equal(res.status, 200);
+                    assert.equal(data, expect);
+                });
 
             chai.request(server)
                 .get('/games')
@@ -58,6 +67,7 @@ describe('go.js', function() {
                     var expect = JSON.stringify({
                         'games': [
                             {
+                                'id': 1,
                                 'game-owner': 'user1',
                                 'game-challenger': 'user2'
                             }
