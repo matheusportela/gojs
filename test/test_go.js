@@ -58,20 +58,38 @@ describe('go.js', function() {
                     });
                     assert.equal(res.status, 200);
                     assert.equal(data, expect);
-                });
 
+                    chai.request(server)
+                        .get('/games')
+                        .end((err, res) => {
+                            var data = JSON.stringify(res.body);
+                            var expect = JSON.stringify({
+                                'games': [
+                                    {
+                                        'id': 1,
+                                        'game-owner': 'user1',
+                                        'game-challenger': 'user2'
+                                    }
+                                ]
+                            });
+                            assert.equal(res.status, 200);
+                            assert.equal(data, expect);
+
+                            done();
+                        });
+                });
+        });
+
+        it('expect new game with different users in list of games', (done) => {
             chai.request(server)
-                .get('/games')
+                .post('/games')
+                .send({'game-owner': 'user3', 'game-challenger': 'user4'})
                 .end((err, res) => {
                     var data = JSON.stringify(res.body);
                     var expect = JSON.stringify({
-                        'games': [
-                            {
-                                'id': 1,
-                                'game-owner': 'user1',
-                                'game-challenger': 'user2'
-                            }
-                        ]
+                        'id': 2,
+                        'game-owner': 'user3',
+                        'game-challenger': 'user4'
                     });
                     assert.equal(res.status, 200);
                     assert.equal(data, expect);
@@ -79,5 +97,4 @@ describe('go.js', function() {
                     done();
                 });
         });
-    });
 });
