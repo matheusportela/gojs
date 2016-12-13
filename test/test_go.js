@@ -97,5 +97,55 @@ describe('go.js', function() {
                     done();
                 });
         });
+
+        it('expect edit game with new players', (done) => {
+            chai.request(server)
+                .post('/games')
+                .send({'game-owner': 'user1', 'game-challenger': 'user2'})
+                .end((err, res) => {
+                    var gameID = res.body.id;
+
+                    chai.request(server)
+                        .put('/games/' + gameID)
+                        .send({'game-owner': 'user3', 'game-challenger': 'user4'})
+                        .end((err, res) => {
+                            var data = JSON.stringify(res.body);
+                            var expect = JSON.stringify({
+                                'id': gameID,
+                                'game-owner': 'user3',
+                                'game-challenger': 'user4'
+                            });
+                            assert.equal(res.status, 200);
+                            assert.equal(data, expect);
+
+                            done();
+                        });
+                });
+        });
+
+        it('expect edit game with different new players', (done) => {
+            chai.request(server)
+                .post('/games')
+                .send({'game-owner': 'user3', 'game-challenger': 'user4'})
+                .end((err, res) => {
+                    var gameID = res.body.id;
+
+                    chai.request(server)
+                        .put('/games/' + gameID)
+                        .send({'game-owner': 'user4', 'game-challenger': 'user5'})
+                        .end((err, res) => {
+                            var data = JSON.stringify(res.body);
+                            var expect = JSON.stringify({
+                                'id': gameID,
+                                'game-owner': 'user4',
+                                'game-challenger': 'user5'
+                            });
+                            assert.equal(res.status, 200);
+                            assert.equal(data, expect);
+
+                            done();
+                        });
+                });
+        });
     });
 });
